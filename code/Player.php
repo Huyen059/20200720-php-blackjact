@@ -12,6 +12,12 @@ class Player
         return $this->cards;
     }
 
+    public function setCards(Card $card): array
+    {
+        $this->cards[] = [$card->getUnicodeCharacter(true), $card->getValue()];
+        return $this->cards;
+    }
+
     private $lost = false;
 
     /**
@@ -20,14 +26,20 @@ class Player
      */
     public function __construct($deck)
     {
-        $this->cards[] = $deck->drawCard()->getUnicodeCharacter(true);
-        $this->cards[] = $deck->drawCard()->getUnicodeCharacter(true);
+        $card1 = $deck->drawCard();
+        $card2 = $deck->drawCard();
+        $this->cards[] = [$card1->getUnicodeCharacter(true), $card1->getValue()];
+        $this->cards[] = [$card2->getUnicodeCharacter(true), $card2->getValue()];
     }
 
 
-    public function hit()
+    public function hit(Deck $deck)
     {
 
+//        return $deck;
+        $card = $deck->drawCard();
+        $_SESSION['deck'] = serialize($deck);
+        return $card;
     }
 
     public function surrender()

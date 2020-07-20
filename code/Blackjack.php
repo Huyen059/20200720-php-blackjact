@@ -11,7 +11,7 @@ class Blackjack {
         $this->player = new Player($deck);
         $this->dealer = new Player($deck);
 
-        $_SESSION['deck'] = $deck;
+        $_SESSION['deck'] = serialize($deck);
     }
 
     public function getPlayer()
@@ -28,6 +28,7 @@ class Blackjack {
     {
         return $this->deck;
     }
+
     private $dealer;
     private $deck;
 }
