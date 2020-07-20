@@ -3,6 +3,17 @@
 class Player
 {
     private $cards = [];
+    private $lost = false;
+
+    public function hasLost(): bool
+    {
+        return $this->lost;
+    }
+
+    public function setLost(bool $lost): void
+    {
+        $this->lost = $lost;
+    }
 
     /**
      * @return array
@@ -18,7 +29,7 @@ class Player
         return $this->cards;
     }
 
-    private $lost = false;
+
 
     /**
      * Player constructor.
@@ -42,18 +53,18 @@ class Player
         return $card;
     }
 
-    public function surrender()
+    public function surrender(Player $player)
     {
-
+        $player->setLost(true);
     }
 
-    public function getScore()
+    public function getScore(Player $player) : int
     {
-
-    }
-
-    public function hasLost()
-    {
-
+        $playerCards = $player->getCards();
+        $score = 0;
+        foreach ($playerCards as $playerCard) {
+            $score += $playerCard[1];
+        }
+        return $score;
     }
 }

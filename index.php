@@ -19,17 +19,31 @@ if(!isset($_SESSION['player'])) {
 }
 
 if(isset($_POST['stand'])){
-    echo 'stand';
+    $newCard = $dealer->hit(unserialize($_SESSION['deck']));
+    $dealer->setCards($newCard);
+    $_SESSION['dealer'] = serialize($dealer);
+    $dealerScore = $dealer->getScore($dealer);
+    if ($dealerScore > 21) {
+        $dealer->setLost(true);
+        unset($_SESSION['dealer']);
+    }
 }
 
 if(isset($_POST['hit'])){
     $newCard = $player->hit(unserialize($_SESSION['deck']));
     $player->setCards($newCard);
     $_SESSION['player'] = serialize($player);
-    var_dump(unserialize($_SESSION['player']));
+    $playerScore = $player->getScore($player);
+    if ($playerScore > 21) {
+        $player->setLost(true);
+        unset($_SESSION['player']);
+    }
 }
 
+
 if(isset($_POST['surrender'])){
+    $player->surrender($player);
+    unset($_SESSION['player']);
     echo 'surrender';
 }
 
