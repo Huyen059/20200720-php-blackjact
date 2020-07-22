@@ -15,9 +15,6 @@ class Player
         $this->lost = $lost;
     }
 
-    /**
-     * @return array
-     */
     public function getCards(): array
     {
         return $this->cards;
@@ -29,13 +26,7 @@ class Player
         return $this->cards;
     }
 
-
-
-    /**
-     * Player constructor.
-     * @param array $cards
-     */
-    public function __construct($deck)
+    public function __construct(Deck $deck)
     {
         $card1 = $deck->drawCard();
         $card2 = $deck->drawCard();
@@ -43,28 +34,46 @@ class Player
         $this->cards[] = [$card2->getUnicodeCharacter(true), $card2->getValue()];
     }
 
-
     public function hit(Deck $deck)
     {
-
-//        return $deck;
         $card = $deck->drawCard();
         $_SESSION['deck'] = serialize($deck);
-        return $card;
+        $this->setCards($card);
+        $_SESSION['player'] = serialize($this);
+        //------ Can use $this->>getScore($this) directly in the if
+        $playerScore = $this->getScore($this);
+        if ($playerScore > 21) {
+            $this->setLost(true);
+//            unset($_SESSION['player']);
+            session_destroy();
+        }
     }
 
-    public function surrender(Player $player)
+    public function surrender(Player $player) : void
     {
         $player->setLost(true);
     }
 
-    public function getScore(Player $player) : int
+    public function getScore() : int
     {
-        $playerCards = $player->getCards();
+        $playerCards = $this->getCards();
         $score = 0;
         foreach ($playerCards as $playerCard) {
             $score += $playerCard[1];
         }
         return $score;
+    }
+}
+
+class Dealer extends Player {
+    public function __construct(Deck $deck)
+    {
+        parent::__construct($deck);
+    }
+    public function hit() : void
+    {
+        while ($this->getScore($this) < 15) {
+            parent::hit(unserialize($_SESSION['deck']));
+        }
     }
 }

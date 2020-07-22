@@ -18,9 +18,9 @@ error_reporting(E_ALL);
 </head>
 <body>
 <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-    <input type="radio" name="hit" id="hit">Hit
-    <input type="radio" name="stand" id="stand">Stand
-    <input type="radio" name="surrender" id="surrender">Surrender
+    <label><input type="radio" name="choice" value="hit" id="hit">Hit</label>
+    <label><input type="radio" name="choice" value="stand" id="stand">Stand</label>
+    <label><input type="radio" name="choice" value="surrender" id="surrender">Surrender</label>
     <button type="submit" name="submit">Submit</button>
 </form>
 </body>

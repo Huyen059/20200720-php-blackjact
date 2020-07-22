@@ -18,33 +18,34 @@ if(!isset($_SESSION['player'])) {
     $dealer = unserialize($_SESSION['dealer']);
 }
 
-if(isset($_POST['stand'])){
-    $newCard = $dealer->hit(unserialize($_SESSION['deck']));
-    $dealer->setCards($newCard);
-    $_SESSION['dealer'] = serialize($dealer);
-    $dealerScore = $dealer->getScore($dealer);
-    if ($dealerScore > 21) {
-        $dealer->setLost(true);
-        unset($_SESSION['dealer']);
+if(isset($_POST['choice']) && $_POST['choice'] === 'stand'){
+    $dealer->hit();
+
+    if ($dealer->hasLost() !== true) {
+        if($dealer->getScore() < $player->getScore()) {
+            $dealer->setLost(true);
+        } else {
+            $player->setLost(true);
+        }
     }
+
+//    unset($_SESSION['player']);
+    session_destroy();
 }
 
-if(isset($_POST['hit'])){
-    $newCard = $player->hit(unserialize($_SESSION['deck']));
-    $player->setCards($newCard);
-    $_SESSION['player'] = serialize($player);
-    $playerScore = $player->getScore($player);
-    if ($playerScore > 21) {
-        $player->setLost(true);
-        unset($_SESSION['player']);
-    }
+if(isset($_POST['choice']) && $_POST['choice'] === 'hit'){
+    $player->hit(unserialize($_SESSION['deck']));
 }
 
 
-if(isset($_POST['surrender'])){
+if(isset($_POST['choice']) && $_POST['choice'] === 'surrender'){
     $player->surrender($player);
-    unset($_SESSION['player']);
-    echo 'surrender';
+//    unset($_SESSION['player']);
+    session_destroy();
 }
+
+//------ Need to remove these when done with display
+echo $dealer->getScore() . ' ' . 'Dealer lost?' . $dealer->hasLost() . '<br>';
+echo $player->getScore() . ' ' . 'Player lost?' . $player->hasLost();
 
 require 'view-form.php';

@@ -2,6 +2,8 @@
 
 class Blackjack {
     private $player;
+    private $dealer;
+    private $deck;
 
     public function __construct()
     {
@@ -9,26 +11,18 @@ class Blackjack {
         $deck->shuffle();
 
         $this->player = new Player($deck);
-        $this->dealer = new Player($deck);
+        $this->dealer = new Dealer($deck);
 
         $_SESSION['deck'] = serialize($deck);
     }
 
-    public function getPlayer()
+    public function getPlayer() : Player
     {
         return $this->player;
     }
 
-    public function getDealer()
+    public function getDealer() : Dealer
     {
         return $this->dealer;
     }
-
-    public function getDeck()
-    {
-        return $this->deck;
-    }
-
-    private $dealer;
-    private $deck;
 }
