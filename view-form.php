@@ -59,9 +59,9 @@ if($game->getPlayer()->hasLost()){
 ?>
 
 <form class="text-center mt-3" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-    <label><input type="radio" name="choice" value="hit" id="hit">Hit</label>
-    <label><input type="radio" name="choice" value="stand" id="stand">Stand</label>
-    <label><input type="radio" name="choice" value="surrender" id="surrender">Surrender</label>
+    <label><input type="radio" name="<?=CHOICE; ?>" value="<?=HIT; ?>" id="hit">Hit</label>
+    <label><input type="radio" name="<?=CHOICE; ?>" value="<?=STAND; ?>" id="stand">Stand</label>
+    <label><input type="radio" name="<?=CHOICE; ?>" value="<?=SURRENDER; ?>" id="surrender">Surrender</label>
     <button class="btn btn-info" type="submit" name="submit">Submit</button>
 </form>
 </body>

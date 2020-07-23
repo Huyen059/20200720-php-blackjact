@@ -12,6 +12,11 @@ require 'code/Player.php';
 require 'code/Dealer.php';
 require 'code/Blackjack.php';
 
+const CHOICE = 'choice';
+const STAND = 'stand';
+const HIT = 'hit';
+const SURRENDER = 'surrender';
+
 session_start();
 
 if(!isset($_SESSION['blackjack'])) {
@@ -21,21 +26,21 @@ if(!isset($_SESSION['blackjack'])) {
     $game = unserialize($_SESSION['blackjack'], [Blackjack::class]);
 }
 
-if(isset($_POST['choice'])) {
-    switch ($_POST['choice']) {
-        case 'stand':
+if(isset($_POST[CHOICE])) {
+    switch ($_POST[CHOICE]) {
+        case STAND:
             $game->getDealer()->hit($game);
             $game->settleGame();
             unset($_SESSION['blackjack']);
             break;
-        case 'hit':
+        case HIT:
             $game->getPlayer()->hit($game);
             $_SESSION['blackjack'] = serialize($game);
             if($game->getPlayer()->hasLost()){
                 unset($_SESSION['blackjack']);
             }
             break;
-        case 'surrender':
+        case SURRENDER:
             $game->getPlayer()->surrender();
             unset($_SESSION['blackjack']);
             break;
