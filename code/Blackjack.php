@@ -40,7 +40,7 @@ class Blackjack {
         return $this->deck;
     }
 
-    function settleGame(): void
+    public function settleGame(): void
     {
         if (!$this->getDealer()->hasLost()) {
             if ($this->getDealer()->getScore() < $this->getPlayer()->getScore()) {

@@ -43,18 +43,17 @@ error_reporting(E_ALL);
 </section>
 
 <?php
+$displayScores = "<p>Dealer score: {$game->getDealer()->getScore()}</p><p>Player score: {$game->getPlayer()->getScore()}</p>";
+$link = "<a href={$_SERVER['PHP_SELF']} class='text-white btn btn-secondary'>Play again</a>";
+
 if($game->getDealer()->hasLost()){
     echo '<div class="text-center alert alert-success" role="alert">
-    <p><strong>Well done!</strong> You successfully destroyed the dealer</p><p>Dealer score: '
-        .$game->getDealer()->getScore().'</p><p>Player score: '.$game->getPlayer()->getScore().
-        '</p><a href="'.$_SERVER['PHP_SELF'].'" class="text-white btn btn-secondary">Play again</a></div>';
+    <p><strong>Well done!</strong> You successfully destroyed the dealer</p>'.$displayScores.$link.'</div>';
 }
 
 if($game->getPlayer()->hasLost()){
     echo '<div class="text-center alert alert-danger" role="alert">
-    <p><strong>NOOO!</strong> You Lost :(</p><p>Dealer score: '
-        .$game->getDealer()->getScore().'</p><p>Player score: '.$game->getPlayer()->getScore().
-        '</p><a href="'.$_SERVER['PHP_SELF'].'" class="text-white btn btn-secondary">Play again</a></div>';
+    <p><strong>NOOO!</strong> You Lost :(</p>'.$displayScores.$link.'</div>';
 }
 ?>
 
