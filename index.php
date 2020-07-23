@@ -21,23 +21,25 @@ if(!isset($_SESSION['blackjack'])) {
     $game = unserialize($_SESSION['blackjack'], [Blackjack::class]);
 }
 
-if(isset($_POST['choice']) && $_POST['choice'] === 'stand'){
-    $game->getDealer()->hit($game);
-    $game->settleGame();
-    unset($_SESSION['blackjack']);
-}
-
-if(isset($_POST['choice']) && $_POST['choice'] === 'hit'){
-    $game->getPlayer()->hit($game);
-    $_SESSION['blackjack'] = serialize($game);
-    if($game->getPlayer()->hasLost()){
-        unset($_SESSION['blackjack']);
+if(isset($_POST['choice'])) {
+    switch ($_POST['choice']) {
+        case 'stand':
+            $game->getDealer()->hit($game);
+            $game->settleGame();
+            unset($_SESSION['blackjack']);
+            break;
+        case 'hit':
+            $game->getPlayer()->hit($game);
+            $_SESSION['blackjack'] = serialize($game);
+            if($game->getPlayer()->hasLost()){
+                unset($_SESSION['blackjack']);
+            }
+            break;
+        case 'surrender':
+            $game->getPlayer()->surrender();
+            unset($_SESSION['blackjack']);
+            break;
     }
-}
-
-if(isset($_POST['choice']) && $_POST['choice'] === 'surrender'){
-    $game->getPlayer()->surrender();
-    unset($_SESSION['blackjack']);
 }
 
 require 'view-form.php';
