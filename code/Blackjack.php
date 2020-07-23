@@ -12,8 +12,22 @@ class Blackjack {
 
         $this->player = new Player($deck);
         $this->dealer = new Dealer($deck);
+        $this->deck = $deck;
+    }
 
-        $_SESSION['deck'] = serialize($deck);
+    public function setPlayer(Player $player): void
+    {
+        $this->player = $player;
+    }
+
+    public function setDeck(Deck $deck): void
+    {
+        $this->deck = $deck;
+    }
+
+    public function getDeck(): Deck
+    {
+        return $this->deck;
     }
 
     public function getPlayer() : Player

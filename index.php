@@ -7,25 +7,21 @@ require 'code/Blackjack.php';
 
 session_start();
 
-if(!isset($_SESSION['player'])) {
-    $newGame = new Blackjack();
-    $player = $newGame->getPlayer();
-    $dealer = $newGame->getDealer();
-    $_SESSION['player'] = serialize($player);
-    $_SESSION['dealer'] = serialize($dealer);
+if(!isset($_SESSION['blackjack'])) {
+    $game = new Blackjack();
+    $_SESSION['blackjack'] = serialize($game);
 } else {
-    $player = unserialize($_SESSION['player']);
-    $dealer = unserialize($_SESSION['dealer']);
+    $game = unserialize($_SESSION['blackjack']);
 }
 
 if(isset($_POST['choice']) && $_POST['choice'] === 'stand'){
-    $dealer->hit();
+    $game->getDealer()->hit();
 
-    if ($dealer->hasLost() !== true) {
-        if($dealer->getScore() < $player->getScore()) {
-            $dealer->setLost(true);
+    if ($game->getDealer()->hasLost() !== true) {
+        if($game->getDealer()->getScore() < $game->getPlayer()->getScore()) {
+            $game->getDealer()->setLost(true);
         } else {
-            $player->setLost(true);
+            $game->getPlayer()->setLost(true);
         }
     }
 
@@ -34,18 +30,18 @@ if(isset($_POST['choice']) && $_POST['choice'] === 'stand'){
 }
 
 if(isset($_POST['choice']) && $_POST['choice'] === 'hit'){
-    $player->hit(unserialize($_SESSION['deck']));
+    $game->getPlayer()->hit($game);
 }
 
 
 if(isset($_POST['choice']) && $_POST['choice'] === 'surrender'){
-    $player->surrender($player);
+    $game->getPlayer()->surrender();
 //    unset($_SESSION['player']);
     session_destroy();
 }
 
 //------ Need to remove these when done with display
-echo $dealer->getScore() . ' ' . 'Dealer lost?' . $dealer->hasLost() . '<br>';
-echo $player->getScore() . ' ' . 'Player lost?' . $player->hasLost();
+echo $game->getDealer()->getScore() . ' ' . 'Dealer lost?' . $game->getDealer()->hasLost() . '<br>';
+echo $game->getPlayer()->getScore() . ' ' . 'Player lost?' . $game->getPlayer()->hasLost();
 
 require 'view-form.php';

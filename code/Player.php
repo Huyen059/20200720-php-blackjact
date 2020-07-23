@@ -34,24 +34,24 @@ class Player
         $this->cards[] = [$card2->getUnicodeCharacter(true), $card2->getValue()];
     }
 
-    public function hit(Deck $deck)
+    public function hit(Blackjack $game)
     {
+        $deck = $game->getDeck();
         $card = $deck->drawCard();
-        $_SESSION['deck'] = serialize($deck);
         $this->setCards($card);
-        $_SESSION['player'] = serialize($this);
-        //------ Can use $this->>getScore($this) directly in the if
-        $playerScore = $this->getScore($this);
-        if ($playerScore > 21) {
+        $game->setDeck($deck);
+        $game->setPlayer($this);
+        $_SESSION['blackjack'] = serialize($game);
+        if ($this->getScore() > 21) {
             $this->setLost(true);
 //            unset($_SESSION['player']);
             session_destroy();
         }
     }
 
-    public function surrender(Player $player) : void
+    public function surrender() : void
     {
-        $player->setLost(true);
+        $this->setLost(true);
     }
 
     public function getScore() : int
@@ -66,14 +66,10 @@ class Player
 }
 
 class Dealer extends Player {
-    public function __construct(Deck $deck)
-    {
-        parent::__construct($deck);
-    }
     public function hit() : void
     {
-        while ($this->getScore($this) < 15) {
-            parent::hit(unserialize($_SESSION['deck']));
+        while ($this->getScore() < 15) {
+            parent::hit(unserialize($_SESSION['blackjack']));
         }
     }
 }
