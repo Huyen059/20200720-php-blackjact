@@ -1,9 +1,22 @@
 <?php
+declare(strict_types=1);
+//Displaying errors since this is turned off by default
+ini_set('display_errors', "1");
+ini_set('display_startup_errors', "1");
+error_reporting(E_ALL);
 
 class Player
 {
-    private $cards = [];
-    private $lost = false;
+    const GAME_LIMIT = 21;
+    private array $cards = [];
+    private bool $lost = false;
+
+
+    public function __construct(Deck $deck)
+    {
+        $this->cards[] = $deck->drawCard();
+        $this->cards[] = $deck->drawCard();
+    }
 
     public function hasLost(): bool
     {
@@ -15,6 +28,7 @@ class Player
         $this->lost = $lost;
     }
 
+    /** @return  Card[] */ // annotations
     public function getCards(): array
     {
         return $this->cards;
@@ -22,30 +36,19 @@ class Player
 
     public function setCards(Card $card): array
     {
-        $this->cards[] = [$card->getUnicodeCharacter(true), $card->getValue()];
+        $this->cards[] = $card;
         return $this->cards;
     }
 
-    public function __construct(Deck $deck)
-    {
-        $card1 = $deck->drawCard();
-        $card2 = $deck->drawCard();
-        $this->cards[] = [$card1->getUnicodeCharacter(true), $card1->getValue()];
-        $this->cards[] = [$card2->getUnicodeCharacter(true), $card2->getValue()];
-    }
-
-    public function hit(Blackjack $game)
+    public function hit(Blackjack $game) : void
     {
         $deck = $game->getDeck();
         $card = $deck->drawCard();
         $this->setCards($card);
         $game->setDeck($deck);
-        $game->setPlayer($this);
-        $_SESSION['blackjack'] = serialize($game);
-        if ($this->getScore() > 21) {
+//        $game->setPlayer($this); //HAS TO REMOVE THIS OTHERWISE PLAYER AND DEALER HAVE THE SAME CARDS
+        if ($this->getScore() > self::GAME_LIMIT) {
             $this->setLost(true);
-//            unset($_SESSION['player']);
-            session_destroy();
         }
     }
 
@@ -56,20 +59,12 @@ class Player
 
     public function getScore() : int
     {
-        $playerCards = $this->getCards();
+        $cards = $this->getCards();
         $score = 0;
-        foreach ($playerCards as $playerCard) {
-            $score += $playerCard[1];
+        foreach ($cards as $card) {
+            $score += $card->getValue();
         }
         return $score;
     }
 }
 
-class Dealer extends Player {
-    public function hit() : void
-    {
-        while ($this->getScore() < 15) {
-            parent::hit(unserialize($_SESSION['blackjack']));
-        }
-    }
-}
