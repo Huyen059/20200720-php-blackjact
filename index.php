@@ -23,15 +23,7 @@ if(!isset($_SESSION['blackjack'])) {
 
 if(isset($_POST['choice']) && $_POST['choice'] === 'stand'){
     $game->getDealer()->hit($game);
-
-    if (!$game->getDealer()->hasLost()) {
-        if($game->getDealer()->getScore() < $game->getPlayer()->getScore()) {
-            $game->getDealer()->setLost(true);
-        } else {
-            $game->getPlayer()->setLost(true);
-        }
-    }
-
+    $game->settleGame();
     unset($_SESSION['blackjack']);
 }
 
@@ -42,7 +34,6 @@ if(isset($_POST['choice']) && $_POST['choice'] === 'hit'){
         unset($_SESSION['blackjack']);
     }
 }
-
 
 if(isset($_POST['choice']) && $_POST['choice'] === 'surrender'){
     $game->getPlayer()->surrender();

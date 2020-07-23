@@ -59,9 +59,8 @@ class Player
 
     public function getScore() : int
     {
-        $cards = $this->getCards();
         $score = 0;
-        foreach ($cards as $card) {
+        foreach ($this->getCards() as $card) {
             $score += $card->getValue();
         }
         return $score;

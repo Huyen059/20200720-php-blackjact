@@ -6,9 +6,9 @@ ini_set('display_startup_errors', "1");
 error_reporting(E_ALL);
 
 class Blackjack {
-    private $player;
-    private $dealer;
-    private $deck;
+    private Player $player;
+    private Dealer $dealer;
+    private Deck $deck;
 
     public function __construct()
     {
@@ -20,9 +20,14 @@ class Blackjack {
         $this->deck = $deck;
     }
 
-    public function setPlayer(Player $player): void
+    public function getPlayer() : Player
     {
-        $this->player = $player;
+        return $this->player;
+    }
+
+    public function getDealer() : Dealer
+    {
+        return $this->dealer;
     }
 
     public function setDeck(Deck $deck): void
@@ -35,13 +40,15 @@ class Blackjack {
         return $this->deck;
     }
 
-    public function getPlayer() : Player
+    function settleGame(): void
     {
-        return $this->player;
+        if (!$this->getDealer()->hasLost()) {
+            if ($this->getDealer()->getScore() < $this->getPlayer()->getScore()) {
+                $this->getDealer()->setLost(true);
+            } else {
+                $this->getPlayer()->setLost(true);
+            }
+        }
     }
 
-    public function getDealer() : Dealer
-    {
-        return $this->dealer;
-    }
 }

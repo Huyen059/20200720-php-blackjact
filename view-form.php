@@ -24,10 +24,8 @@ error_reporting(E_ALL);
 <section class="stats d-flex justify-content-center align-items-start">
     <section id="player" class="mr-5 ">
         <h2>Player</h2>
-        <div id=""class="cards">
+        <div class="cards">
             <?php
-
-
             foreach ($game->getPlayer()->getCards() as $card) {
                 echo $card->getUnicodeCharacter(true);
             }
@@ -43,6 +41,7 @@ error_reporting(E_ALL);
         <p> </p>
     </section>
 </section>
+
 <?php
 if($game->getDealer()->hasLost()){
     echo '<div class="text-center alert alert-success" role="alert">
@@ -57,9 +56,8 @@ if($game->getPlayer()->hasLost()){
         .$game->getDealer()->getScore().'</p><p>Player score: '.$game->getPlayer()->getScore().
         '</p><a href="'.$_SERVER['PHP_SELF'].'" class="text-white btn btn-secondary">Play again</a></div>';
 }
-
-
 ?>
+
 <form class="text-center mt-3" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
     <label><input type="radio" name="choice" value="hit" id="hit">Hit</label>
     <label><input type="radio" name="choice" value="stand" id="stand">Stand</label>
